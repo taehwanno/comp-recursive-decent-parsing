@@ -10,14 +10,30 @@ void error(char *msg) {
 int LA;
 
 int yylex() {
-	return getchar();
+  return getchar();
+}
+
+void skipSpaces() {
+  while (LA == ' ') {
+    LA = yylex();
+  }
 }
 
 void match(int t) {
 	if (LA == t) {
     LA = yylex();
+    skipSpaces();
   } else {
 		error("lexical error");
+  }
+}
+
+void matchDigit(int t) {
+  if (t >= '0' && t <= '9') {
+    LA = yylex();
+    skipSpaces();
+  } else {
+    error("lexical error");
   }
 }
 
@@ -77,9 +93,9 @@ int F() {
     puts("F -> ( E )");
     match('('); result = E(); match(')');
   } else {
-    result = LA;
+    result = LA - '0';
     puts("F -> num");
-    yylex();
+    matchDigit(LA);
   }
   return result;
 }
