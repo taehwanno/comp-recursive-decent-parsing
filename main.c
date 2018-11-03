@@ -3,8 +3,8 @@
 #include <stdbool.h>
 
 void error(char *msg) {
-	printf("Error: %s\n", msg);
-	exit(1);
+  printf("Error: %s\n", msg);
+  exit(1);
 }
 
 int LA;
@@ -18,10 +18,10 @@ int yylex() {
 }
 
 void match(int t) {
-	if (LA == t) {
+  if (LA == t) {
     LA = yylex();
   } else {
-		error("lexical error");
+    error("lexical error");
   }
 }
 
@@ -89,7 +89,7 @@ int F() {
 }
 
 int main() {
-	LA = yylex();
+  LA = yylex();
   printf("%d\n", E());
-	return 0;
+  return 0;
 }
