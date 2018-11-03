@@ -10,19 +10,16 @@ void error(char *msg) {
 int LA;
 
 int yylex() {
-  return getchar();
-}
-
-void skipSpaces() {
-  while (LA == ' ') {
-    LA = yylex();
-  }
+  int c;
+  do {
+    c = getchar();
+  } while (c == ' ');
+  return c;
 }
 
 void match(int t) {
 	if (LA == t) {
     LA = yylex();
-    skipSpaces();
   } else {
 		error("lexical error");
   }
@@ -31,7 +28,6 @@ void match(int t) {
 void matchDigit(int t) {
   if (t >= '0' && t <= '9') {
     LA = yylex();
-    skipSpaces();
   } else {
     error("lexical error");
   }
@@ -45,7 +41,6 @@ int T1();
 
 // E -> T E1
 int E() {
-  puts("E -> T E1");
   return T() + E1();
 }
 
@@ -54,11 +49,9 @@ int E() {
 int E1() {
   if (LA == '+') {
     int t = 0, e1 = 0;
-    puts("E1 -> + T E1");
     match('+'); t = T(); e1 = E1();
     return t + e1;
   } else {
-    puts("E1 -> ");
     return 0;
   }
 }
@@ -66,7 +59,6 @@ int E1() {
 // T -> F T1
 int T() {
   int f = 0, t1 = 0;
-  puts("T -> F T1");
   f = F(); t1 = T1();
   return f * t1;
 }
@@ -76,11 +68,9 @@ int T() {
 int T1() {
   if (LA == '*') {
     int f = 0, t1 = 0;
-    puts("T -> * F T1");
     match('*'); f = F(); t1 = T1();
     return f * t1;
   } else {
-    puts("T1 -> ");
     return 1;
   }
 }
@@ -90,11 +80,9 @@ int T1() {
 int F() {
   int result = 0;
   if (LA == '(') {
-    puts("F -> ( E )");
     match('('); result = E(); match(')');
   } else {
     result = LA - '0';
-    puts("F -> num");
     matchDigit(LA);
   }
   return result;
@@ -102,6 +90,6 @@ int F() {
 
 int main() {
 	LA = yylex();
-  printf("Result: %d\n", E());
+  printf("%d\n", E());
 	return 0;
 }
